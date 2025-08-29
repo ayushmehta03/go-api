@@ -23,7 +23,7 @@ type Config struct{
 
 
 
-func MustLoad(){
+func MustLoad() *Config{
 	var configPath string
 	configPath=os.Getenv("CONFIG_PATH")
 
@@ -48,5 +48,5 @@ err:=	cleanenv.ReadConfig(configPath,&cfg)
 		log.Fatal("Cnnot read config file")
 	}
 
-
+	return &cfg
 }
