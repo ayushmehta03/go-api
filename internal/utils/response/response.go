@@ -6,9 +6,29 @@ import (
 )
 
 
+type Response struct{
+	Status string `json:"status"`
+
+	Error string 	`json:"error"`
+}
+
+
+const (
+	StatusOk="OK"
+	StatusErr="Error"
+)
+
 func WriteJson(w http.ResponseWriter,status int,data interface{}) error{
 	w.Header().Set("content-type","application/json")
 	w.WriteHeader(status)
 
 	return json.NewEncoder(w).Encode(data)
+}
+
+
+func GeneralError(err error) Response{
+ return Response{
+	Status:StatusErr,
+	Error:err.Error(),
+ }
 }

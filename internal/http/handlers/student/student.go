@@ -13,19 +13,24 @@ import (
 
 func New() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
 		var student types.Student
+				slog.Info("creating student", slog.Any("student", student))
+
 
 		err := json.NewDecoder(r.Body).Decode(&student)
 		if err != nil {
 			if errors.Is(err, io.EOF) {
-				response.WriteJson(w, http.StatusBadRequest, map[string]string{"error": "empty body"})
+				response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
 				return
 			}
 			response.WriteJson(w, http.StatusBadRequest, map[string]string{"error": "invalid JSON"})
 			return
 		}
 
-		slog.Info("creating student", slog.Any("student", student))
+		// validate
+
+
 
 
 		response.WriteJson(w, http.StatusCreated, map[string]string{"success": "ok"})
