@@ -1,13 +1,17 @@
 package main
 
 import (
+	"context"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/ayushmehta03/go-api/internal/config"
+	"github.com/ayushmehta03/go-api/internal/http/handlers/student"
 )
 
 
@@ -19,9 +23,7 @@ func main(){
 
 
 	router:=http.NewServeMux();
-	router.HandleFunc("GET /",func(w http.ResponseWriter, r *http.Request){
-		w.Write([] byte("Home Page"))
-	})
+	router.HandleFunc("POST /api/students",student.New())
 	
 	ch:=make(chan os.Signal,1)
 
@@ -36,12 +38,24 @@ func main(){
 		err:=	server.ListenAndServe()
 
 if err!=nil{
-	log.Fatal("nternal Server error")
+	log.Fatal("Internal Server error")
 }
 
 	}()
 
 	<-ch
+
+	slog.Info("shutting down the server")
+
+	ctx,cancel:=context.WithTimeout(context.Background(),5*time.Second)
+	defer cancel()
+	err:=server.Shutdown(ctx)
+	if err!=nil{
+		slog.Error("FAILED TO SHUTDOWN",slog.String("error",err.Error()))
+
+	}
+
+	slog.Info("ShutDown succesfull")
 
 
 
