@@ -34,7 +34,7 @@ func main(){
 
 	router:=http.NewServeMux();
 	router.HandleFunc("POST /api/students",student.New(storage))
-	
+	router.HandleFunc("GET /api/students/{id}",student.GetById(storage))
 	ch:=make(chan os.Signal,1)
 
 	signal.Notify(ch,os.Interrupt,syscall.SIGINT,syscall.SIGTERM)
