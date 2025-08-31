@@ -38,3 +38,23 @@ func New(cfg *config.Config)(*SqlLITE,error){
 
 
 }
+
+func (s *SqlLITE) CreateStudent(name string , email string, age int)(int64,error){
+	stat,err:=s.Db.Prepare("INSERT INTO students (name,email,age) VALUES(?,?,?)")
+	if err!=nil{
+		return 0,err
+	}
+	defer stat.Close()
+	result,err:=stat.Exec(name,email,age)
+	if err!=nil{
+		return 0,err
+	}	
+	lastId,err:=result.LastInsertId()
+	if err!=nil{
+		return 0,err
+	}
+	return lastId,nil
+
+	
+	return 0,nil
+}

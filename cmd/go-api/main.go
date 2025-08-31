@@ -24,7 +24,7 @@ func main(){
 
 
 
-	_,err:=sqllite.New(cfg)
+	storage,err:=sqllite.New(cfg)
 	if err!=nil{
 		log.Fatal(err)
 	}
@@ -33,7 +33,7 @@ func main(){
 
 
 	router:=http.NewServeMux();
-	router.HandleFunc("POST /api/students",student.New())
+	router.HandleFunc("POST /api/students",student.New(storage))
 	
 	ch:=make(chan os.Signal,1)
 
